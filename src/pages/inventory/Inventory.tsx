@@ -4,9 +4,10 @@ import { useTranslation } from 'react-i18next';
 import { Card } from '../../components/common/Card';
 import { Button } from '../../components/common/Button';
 import { Table } from '../../components/common/Table';
+import { AddProductModal } from '../../components/modals/AddProductModal';
 
 // Sample data
-const productsData = [
+const initialProductsData = [
   { id: 1, code: 'PRD001', name: 'لابتوب Dell XPS', category: 'إلكترونيات', quantity: 15, minQuantity: 5, purchasePrice: 15000, sellingPrice: 20000, supplier: 'مورد A' },
   { id: 2, code: 'PRD002', name: 'هاتف iPhone 14', category: 'إلكترونيات', quantity: 3, minQuantity: 10, purchasePrice: 18000, sellingPrice: 23000, supplier: 'مورد B' },
   { id: 3, code: 'PRD003', name: 'شاشة Samsung 32"', category: 'إلكترونيات', quantity: 25, minQuantity: 8, purchasePrice: 5000, sellingPrice: 7000, supplier: 'مورد A' },
@@ -17,13 +18,19 @@ const productsData = [
 export const Inventory = () => {
   const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState('');
+  const [products, setProducts] = useState(initialProductsData);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const filteredProducts = productsData.filter(product =>
+  const handleAddProduct = (product: any) => {
+    setProducts(prev => [...prev, product]);
+  };
+
+  const filteredProducts = products.filter(product =>
     product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     product.code.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const lowStockProducts = productsData.filter(p => p.quantity <= p.minQuantity);
+  const lowStockProducts = products.filter(p => p.quantity <= p.minQuantity);
 
   const columns = [
     { header: t('productCode'), accessor: 'code' },
@@ -95,7 +102,7 @@ export const Inventory = () => {
         <h1 className="text-3xl font-bold text-gray-800 dark:text-white">
           {t('inventory')}
         </h1>
-        <Button icon={Plus} variant="primary">
+        <Button icon={Plus} variant="primary" onClick={() => setIsModalOpen(true)}>
           {t('addProduct')}
         </Button>
       </div>
@@ -149,18 +156,18 @@ export const Inventory = () => {
         <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-6 text-white shadow-lg">
           <Package className="w-8 h-8 mb-2 opacity-80" />
           <p className="text-sm opacity-90 mb-1">إجمالي المنتجات</p>
-          <p className="text-3xl font-bold">{productsData.length}</p>
+          <p className="text-3xl font-bold">{products.length}</p>
         </div>
         <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-xl p-6 text-white shadow-lg">
           <p className="text-sm opacity-90 mb-1">قيمة المخزون</p>
           <p className="text-3xl font-bold">
-            {productsData.reduce((sum, p) => sum + (p.purchasePrice * p.quantity), 0).toLocaleString()}
+            {products.reduce((sum, p) => sum + (p.purchasePrice * p.quantity), 0).toLocaleString()}
           </p>
         </div>
         <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl p-6 text-white shadow-lg">
           <p className="text-sm opacity-90 mb-1">إجمالي الكمية</p>
           <p className="text-3xl font-bold">
-            {productsData.reduce((sum, p) => sum + p.quantity, 0)}
+            {products.reduce((sum, p) => sum + p.quantity, 0)}
           </p>
         </div>
         <div className="bg-gradient-to-br from-red-500 to-red-600 rounded-xl p-6 text-white shadow-lg">
@@ -169,6 +176,13 @@ export const Inventory = () => {
           <p className="text-3xl font-bold">{lowStockProducts.length}</p>
         </div>
       </div>
+
+      {/* Add Product Modal */}
+      <AddProductModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSave={handleAddProduct}
+      />
     </div>
   );
 };

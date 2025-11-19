@@ -4,9 +4,10 @@ import { useTranslation } from 'react-i18next';
 import { Card } from '../../components/common/Card';
 import { Button } from '../../components/common/Button';
 import { Table } from '../../components/common/Table';
+import { AddCustomerModal } from '../../components/modals/AddCustomerModal';
 
 // Sample data
-const customersData = [
+const initialCustomersData = [
   { id: 1, name: 'أحمد محمد', phone: '777123456', email: 'ahmed@example.com', balance: 5000, address: 'صنعاء، اليمن' },
   { id: 2, name: 'فاطمة علي', phone: '777234567', email: 'fatima@example.com', balance: -2000, address: 'عدن، اليمن' },
   { id: 3, name: 'محمود حسن', phone: '777345678', email: 'mahmoud@example.com', balance: 0, address: 'تعز، اليمن' },
@@ -17,8 +18,14 @@ const customersData = [
 export const Customers = () => {
   const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState('');
+  const [customers, setCustomers] = useState(initialCustomersData);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const filteredCustomers = customersData.filter(customer =>
+  const handleAddCustomer = (customer: any) => {
+    setCustomers(prev => [...prev, customer]);
+  };
+
+  const filteredCustomers = customers.filter(customer =>
     customer.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     customer.phone.includes(searchQuery)
   );
@@ -72,7 +79,7 @@ export const Customers = () => {
         <h1 className="text-3xl font-bold text-gray-800 dark:text-white">
           {t('customers')}
         </h1>
-        <Button icon={Plus} variant="primary">
+        <Button icon={Plus} variant="primary" onClick={() => setIsModalOpen(true)}>
           {t('addCustomer')}
         </Button>
       </div>
@@ -108,21 +115,28 @@ export const Customers = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-6 text-white shadow-lg">
           <p className="text-sm opacity-90 mb-1">إجمالي العملاء</p>
-          <p className="text-3xl font-bold">{customersData.length}</p>
+          <p className="text-3xl font-bold">{customers.length}</p>
         </div>
         <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-xl p-6 text-white shadow-lg">
           <p className="text-sm opacity-90 mb-1">رصيد دائن</p>
           <p className="text-3xl font-bold">
-            {customersData.filter(c => c.balance > 0).reduce((sum, c) => sum + c.balance, 0).toLocaleString()}
+            {customers.filter(c => c.balance > 0).reduce((sum, c) => sum + c.balance, 0).toLocaleString()}
           </p>
         </div>
         <div className="bg-gradient-to-br from-red-500 to-red-600 rounded-xl p-6 text-white shadow-lg">
           <p className="text-sm opacity-90 mb-1">رصيد مدين</p>
           <p className="text-3xl font-bold">
-            {Math.abs(customersData.filter(c => c.balance < 0).reduce((sum, c) => sum + c.balance, 0)).toLocaleString()}
+            {Math.abs(customers.filter(c => c.balance < 0).reduce((sum, c) => sum + c.balance, 0)).toLocaleString()}
           </p>
         </div>
       </div>
+
+      {/* Add Customer Modal */}
+      <AddCustomerModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSave={handleAddCustomer}
+      />
     </div>
   );
 };

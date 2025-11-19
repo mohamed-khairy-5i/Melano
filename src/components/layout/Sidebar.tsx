@@ -32,7 +32,7 @@ export const Sidebar = () => {
     <aside 
       className={`${
         isSidebarCollapsed ? 'w-16' : 'w-64'
-      } bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 transition-all duration-300 flex flex-col`}
+      } bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 transition-all duration-300 flex flex-col flex-shrink-0`}
     >
       {/* Toggle Button */}
       <button
