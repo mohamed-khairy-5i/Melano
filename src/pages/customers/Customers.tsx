@@ -6,29 +6,26 @@ import { Button } from '../../components/common/Button';
 import { Table } from '../../components/common/Table';
 import { AddCustomerModal } from '../../components/modals/AddCustomerModal';
 
-// Sample data
-const initialCustomersData = [
-  { id: 1, name: 'أحمد محمد', phone: '777123456', email: 'ahmed@example.com', balance: 5000, address: 'صنعاء، اليمن' },
-  { id: 2, name: 'فاطمة علي', phone: '777234567', email: 'fatima@example.com', balance: -2000, address: 'عدن، اليمن' },
-  { id: 3, name: 'محمود حسن', phone: '777345678', email: 'mahmoud@example.com', balance: 0, address: 'تعز، اليمن' },
-  { id: 4, name: 'سارة خالد', phone: '777456789', email: 'sara@example.com', balance: 3500, address: 'إب، اليمن' },
-  { id: 5, name: 'عمر يوسف', phone: '777567890', email: 'omar@example.com', balance: -1000, address: 'حضرموت، اليمن' },
-];
-
 export const Customers = () => {
   const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState('');
-  const [customers, setCustomers] = useState(initialCustomersData);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const handleAddCustomer = (customer: any) => {
-    setCustomers(prev => [...prev, customer]);
-  };
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [customers, setCustomers] = useState<any[]>([]);
 
   const filteredCustomers = customers.filter(customer =>
     customer.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     customer.phone.includes(searchQuery)
   );
+
+  const handleAddCustomer = (newCustomer: any) => {
+    setCustomers(prev => [...prev, newCustomer]);
+  };
+
+  const handleDeleteCustomer = (id: number) => {
+    if (confirm('هل أنت متأكد من حذف هذا العميل؟')) {
+      setCustomers(prev => prev.filter(c => c.id !== id));
+    }
+  };
 
   const columns = [
     { header: t('customerName'), accessor: 'name' },
@@ -47,22 +44,23 @@ export const Customers = () => {
     {
       header: t('actions'),
       accessor: 'actions',
-      cell: () => (
+      cell: (row: any) => (
         <div className="flex items-center gap-2">
           <button
-            className="p-1.5 rounded-lg bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400 hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors"
+            className="p-2 rounded-lg bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400 hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors"
             title={t('view')}
           >
             <Eye className="w-4 h-4" />
           </button>
           <button
-            className="p-1.5 rounded-lg bg-yellow-100 dark:bg-yellow-900 text-yellow-600 dark:text-yellow-400 hover:bg-yellow-200 dark:hover:bg-yellow-800 transition-colors"
+            className="p-2 rounded-lg bg-yellow-100 dark:bg-yellow-900 text-yellow-600 dark:text-yellow-400 hover:bg-yellow-200 dark:hover:bg-yellow-800 transition-colors"
             title={t('edit')}
           >
             <Edit2 className="w-4 h-4" />
           </button>
           <button
-            className="p-1.5 rounded-lg bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-400 hover:bg-red-200 dark:hover:bg-red-800 transition-colors"
+            onClick={() => handleDeleteCustomer(row.id)}
+            className="p-2 rounded-lg bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-400 hover:bg-red-200 dark:hover:bg-red-800 transition-colors"
             title={t('delete')}
           >
             <Trash2 className="w-4 h-4" />
@@ -72,6 +70,9 @@ export const Customers = () => {
     },
   ];
 
+  const totalCredit = customers.filter(c => c.balance > 0).reduce((sum, c) => sum + c.balance, 0);
+  const totalDebit = Math.abs(customers.filter(c => c.balance < 0).reduce((sum, c) => sum + c.balance, 0));
+
   return (
     <div className="p-6 space-y-6 animate-fadeIn">
       {/* Header */}
@@ -79,7 +80,7 @@ export const Customers = () => {
         <h1 className="text-3xl font-bold text-gray-800 dark:text-white">
           {t('customers')}
         </h1>
-        <Button icon={Plus} variant="primary" onClick={() => setIsModalOpen(true)}>
+        <Button icon={Plus} variant="primary" onClick={() => setIsAddModalOpen(true)}>
           {t('addCustomer')}
         </Button>
       </div>
@@ -94,7 +95,7 @@ export const Customers = () => {
               placeholder={`${t('search')}...`}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pr-10 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-800 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all"
+              className="w-full pr-10 px-4 py-3 rounded-lg border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-800 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all"
             />
           </div>
           <Button variant="secondary">
@@ -113,28 +114,24 @@ export const Customers = () => {
 
       {/* Summary */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-6 text-white shadow-lg">
+        <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-6 text-white shadow-xl">
           <p className="text-sm opacity-90 mb-1">إجمالي العملاء</p>
-          <p className="text-3xl font-bold">{customers.length}</p>
+          <p className="text-4xl font-bold">{customers.length}</p>
         </div>
-        <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-xl p-6 text-white shadow-lg">
+        <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-xl p-6 text-white shadow-xl">
           <p className="text-sm opacity-90 mb-1">رصيد دائن</p>
-          <p className="text-3xl font-bold">
-            {customers.filter(c => c.balance > 0).reduce((sum, c) => sum + c.balance, 0).toLocaleString()}
-          </p>
+          <p className="text-4xl font-bold">{totalCredit.toLocaleString()}</p>
         </div>
-        <div className="bg-gradient-to-br from-red-500 to-red-600 rounded-xl p-6 text-white shadow-lg">
+        <div className="bg-gradient-to-br from-red-500 to-red-600 rounded-xl p-6 text-white shadow-xl">
           <p className="text-sm opacity-90 mb-1">رصيد مدين</p>
-          <p className="text-3xl font-bold">
-            {Math.abs(customers.filter(c => c.balance < 0).reduce((sum, c) => sum + c.balance, 0)).toLocaleString()}
-          </p>
+          <p className="text-4xl font-bold">{totalDebit.toLocaleString()}</p>
         </div>
       </div>
 
       {/* Add Customer Modal */}
       <AddCustomerModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        isOpen={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
         onSave={handleAddCustomer}
       />
     </div>

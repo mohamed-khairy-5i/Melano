@@ -6,24 +6,11 @@ import { Button } from '../../components/common/Button';
 import { Table } from '../../components/common/Table';
 import { AddProductModal } from '../../components/modals/AddProductModal';
 
-// Sample data
-const initialProductsData = [
-  { id: 1, code: 'PRD001', name: 'لابتوب Dell XPS', category: 'إلكترونيات', quantity: 15, minQuantity: 5, purchasePrice: 15000, sellingPrice: 20000, supplier: 'مورد A' },
-  { id: 2, code: 'PRD002', name: 'هاتف iPhone 14', category: 'إلكترونيات', quantity: 3, minQuantity: 10, purchasePrice: 18000, sellingPrice: 23000, supplier: 'مورد B' },
-  { id: 3, code: 'PRD003', name: 'شاشة Samsung 32"', category: 'إلكترونيات', quantity: 25, minQuantity: 8, purchasePrice: 5000, sellingPrice: 7000, supplier: 'مورد A' },
-  { id: 4, code: 'PRD004', name: 'لوحة مفاتيح ميكانيكية', category: 'ملحقات', quantity: 50, minQuantity: 20, purchasePrice: 1000, sellingPrice: 1500, supplier: 'مورد C' },
-  { id: 5, code: 'PRD005', name: 'ماوس لاسلكي', category: 'ملحقات', quantity: 2, minQuantity: 15, purchasePrice: 500, sellingPrice: 800, supplier: 'مورد C' },
-];
-
 export const Inventory = () => {
   const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState('');
-  const [products, setProducts] = useState(initialProductsData);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const handleAddProduct = (product: any) => {
-    setProducts(prev => [...prev, product]);
-  };
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [products, setProducts] = useState<any[]>([]);
 
   const filteredProducts = products.filter(product =>
     product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -31,6 +18,16 @@ export const Inventory = () => {
   );
 
   const lowStockProducts = products.filter(p => p.quantity <= p.minQuantity);
+
+  const handleAddProduct = (newProduct: any) => {
+    setProducts(prev => [...prev, newProduct]);
+  };
+
+  const handleDeleteProduct = (id: number) => {
+    if (confirm('هل أنت متأكد من حذف هذا المنتج؟')) {
+      setProducts(prev => prev.filter(p => p.id !== id));
+    }
+  };
 
   const columns = [
     { header: t('productCode'), accessor: 'code' },
@@ -70,22 +67,23 @@ export const Inventory = () => {
     {
       header: t('actions'),
       accessor: 'actions',
-      cell: () => (
+      cell: (row: any) => (
         <div className="flex items-center gap-2">
           <button
-            className="p-1.5 rounded-lg bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400 hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors"
+            className="p-2 rounded-lg bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400 hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors"
             title={t('view')}
           >
             <Eye className="w-4 h-4" />
           </button>
           <button
-            className="p-1.5 rounded-lg bg-yellow-100 dark:bg-yellow-900 text-yellow-600 dark:text-yellow-400 hover:bg-yellow-200 dark:hover:bg-yellow-800 transition-colors"
+            className="p-2 rounded-lg bg-yellow-100 dark:bg-yellow-900 text-yellow-600 dark:text-yellow-400 hover:bg-yellow-200 dark:hover:bg-yellow-800 transition-colors"
             title={t('edit')}
           >
             <Edit2 className="w-4 h-4" />
           </button>
           <button
-            className="p-1.5 rounded-lg bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-400 hover:bg-red-200 dark:hover:bg-red-800 transition-colors"
+            onClick={() => handleDeleteProduct(row.id)}
+            className="p-2 rounded-lg bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-400 hover:bg-red-200 dark:hover:bg-red-800 transition-colors"
             title={t('delete')}
           >
             <Trash2 className="w-4 h-4" />
@@ -95,6 +93,9 @@ export const Inventory = () => {
     },
   ];
 
+  const totalValue = products.reduce((sum, p) => sum + (p.purchasePrice * p.quantity), 0);
+  const totalQuantity = products.reduce((sum, p) => sum + p.quantity, 0);
+
   return (
     <div className="p-6 space-y-6 animate-fadeIn">
       {/* Header */}
@@ -102,21 +103,21 @@ export const Inventory = () => {
         <h1 className="text-3xl font-bold text-gray-800 dark:text-white">
           {t('inventory')}
         </h1>
-        <Button icon={Plus} variant="primary" onClick={() => setIsModalOpen(true)}>
+        <Button icon={Plus} variant="primary" onClick={() => setIsAddModalOpen(true)}>
           {t('addProduct')}
         </Button>
       </div>
 
       {/* Low Stock Alert */}
       {lowStockProducts.length > 0 && (
-        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4">
+        <div className="bg-red-50 dark:bg-red-900/20 border-2 border-red-200 dark:border-red-800 rounded-xl p-4">
           <div className="flex items-center gap-3">
-            <AlertTriangle className="w-6 h-6 text-red-500" />
+            <AlertTriangle className="w-6 h-6 text-red-500 flex-shrink-0" />
             <div>
               <p className="font-bold text-red-700 dark:text-red-400">
                 تنبيه: {lowStockProducts.length} منتج قارب على النفاد
               </p>
-              <p className="text-sm text-red-600 dark:text-red-500">
+              <p className="text-sm text-red-600 dark:text-red-500 mt-1">
                 المنتجات التالية تحتاج إلى إعادة طلب: {lowStockProducts.map(p => p.name).join('، ')}
               </p>
             </div>
@@ -134,7 +135,7 @@ export const Inventory = () => {
               placeholder={`${t('search')}...`}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pr-10 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-800 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all"
+              className="w-full pr-10 px-4 py-3 rounded-lg border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-800 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all"
             />
           </div>
           <Button variant="secondary">
@@ -153,34 +154,30 @@ export const Inventory = () => {
 
       {/* Summary */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-6 text-white shadow-lg">
+        <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-6 text-white shadow-xl">
           <Package className="w-8 h-8 mb-2 opacity-80" />
           <p className="text-sm opacity-90 mb-1">إجمالي المنتجات</p>
-          <p className="text-3xl font-bold">{products.length}</p>
+          <p className="text-4xl font-bold">{products.length}</p>
         </div>
-        <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-xl p-6 text-white shadow-lg">
+        <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-xl p-6 text-white shadow-xl">
           <p className="text-sm opacity-90 mb-1">قيمة المخزون</p>
-          <p className="text-3xl font-bold">
-            {products.reduce((sum, p) => sum + (p.purchasePrice * p.quantity), 0).toLocaleString()}
-          </p>
+          <p className="text-3xl font-bold">{totalValue.toLocaleString()}</p>
         </div>
-        <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl p-6 text-white shadow-lg">
+        <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl p-6 text-white shadow-xl">
           <p className="text-sm opacity-90 mb-1">إجمالي الكمية</p>
-          <p className="text-3xl font-bold">
-            {products.reduce((sum, p) => sum + p.quantity, 0)}
-          </p>
+          <p className="text-4xl font-bold">{totalQuantity}</p>
         </div>
-        <div className="bg-gradient-to-br from-red-500 to-red-600 rounded-xl p-6 text-white shadow-lg">
+        <div className="bg-gradient-to-br from-red-500 to-red-600 rounded-xl p-6 text-white shadow-xl">
           <AlertTriangle className="w-8 h-8 mb-2 opacity-80" />
           <p className="text-sm opacity-90 mb-1">منتجات قاربت النفاد</p>
-          <p className="text-3xl font-bold">{lowStockProducts.length}</p>
+          <p className="text-4xl font-bold">{lowStockProducts.length}</p>
         </div>
       </div>
 
       {/* Add Product Modal */}
       <AddProductModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        isOpen={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
         onSave={handleAddProduct}
       />
     </div>
