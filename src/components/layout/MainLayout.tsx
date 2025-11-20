@@ -10,7 +10,7 @@ export const MainLayout = () => {
   }, []);
 
   return (
-    <div className="w-screen h-screen flex flex-col bg-dark-bg overflow-hidden">
+    <div className="w-screen h-screen flex flex-col bg-[#0f172a] overflow-hidden">
       {/* Header */}
       <Header />
       
@@ -20,7 +20,7 @@ export const MainLayout = () => {
         <Sidebar />
         
         {/* Page Content */}
-        <main className="flex-1 overflow-auto">
+        <main className="flex-1 overflow-auto bg-[#0f172a]">
           <Outlet />
         </main>
       </div>

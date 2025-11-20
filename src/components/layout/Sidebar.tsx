@@ -24,7 +24,7 @@ export const Sidebar = () => {
   const location = useLocation();
 
   return (
-    <aside className="w-64 bg-dark-card border-r border-dark-border flex flex-col">
+    <aside className="w-64 bg-slate-800/50 backdrop-blur-sm border-r border-slate-700/50 flex flex-col">
       {/* Menu Items */}
       <nav className="flex-1 overflow-y-auto py-4 px-3">
         <ul className="space-y-1">
@@ -40,7 +40,7 @@ export const Sidebar = () => {
                     flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200
                     ${isActive 
                       ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/30' 
-                      : 'text-dark-text hover:bg-dark-border hover:text-white'
+                      : 'text-slate-300 hover:bg-slate-700/50 hover:text-white'
                     }
                   `}
                 >

@@ -5,7 +5,7 @@ import { WindowControls } from './WindowControls';
 
 export const Header = () => {
   const { language, setLanguage, currency, setCurrency, isDarkMode, toggleTheme } = useStore();
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
 
   const handleLanguageChange = () => {
     const newLang = language === 'ar' ? 'en' : 'ar';
@@ -23,7 +23,7 @@ export const Header = () => {
   };
 
   return (
-    <header className="h-14 bg-dark-card border-b border-dark-border flex items-center justify-between px-6 select-none">
+    <header className="h-14 bg-slate-800/50 backdrop-blur-sm border-b border-slate-700/50 flex items-center justify-between px-6 select-none">
       {/* Left Side - Logo and App Name */}
       <div className="flex items-center gap-3">
         <div className="flex items-center gap-3">
@@ -32,9 +32,9 @@ export const Header = () => {
           </div>
           <div>
             <h1 className="text-lg font-bold text-white">
-              {t('appName')}
+              متجر ميلانو
             </h1>
-            <p className="text-xs text-dark-muted">نظام المحاسبة</p>
+            <p className="text-xs text-slate-400">نظام إدارة متكامل</p>
           </div>
         </div>
       </div>
@@ -44,9 +44,9 @@ export const Header = () => {
         {/* Currency Selector */}
         <button
           onClick={handleCurrencyChange}
-          className="flex items-center gap-2 px-3 py-2 rounded-lg bg-dark-bg hover:bg-dark-border transition-colors"
+          className="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-700/50 hover:bg-slate-700 transition-colors"
         >
-          <DollarSign className="w-4 h-4 text-blue-500" />
+          <DollarSign className="w-4 h-4 text-blue-400" />
           <span className="text-sm font-medium text-white">
             {currency}
           </span>
@@ -55,9 +55,9 @@ export const Header = () => {
         {/* Language Toggle */}
         <button
           onClick={handleLanguageChange}
-          className="flex items-center gap-2 px-3 py-2 rounded-lg bg-dark-bg hover:bg-dark-border transition-colors"
+          className="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-700/50 hover:bg-slate-700 transition-colors"
         >
-          <Globe className="w-4 h-4 text-blue-500" />
+          <Globe className="w-4 h-4 text-blue-400" />
           <span className="text-sm font-medium text-white">
             {language === 'ar' ? 'العربية' : 'English'}
           </span>
@@ -66,13 +66,13 @@ export const Header = () => {
         {/* Theme Toggle */}
         <button
           onClick={toggleTheme}
-          className="p-2 rounded-lg bg-dark-bg hover:bg-dark-border transition-colors"
+          className="p-2 rounded-lg bg-slate-700/50 hover:bg-slate-700 transition-colors"
           title={isDarkMode ? 'Light Mode' : 'Dark Mode'}
         >
           {isDarkMode ? (
-            <Sun className="w-5 h-5 text-yellow-500" />
+            <Sun className="w-5 h-5 text-yellow-400" />
           ) : (
-            <Moon className="w-5 h-5 text-blue-500" />
+            <Moon className="w-5 h-5 text-blue-400" />
           )}
         </button>
 
