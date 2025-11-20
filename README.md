@@ -1,73 +1,103 @@
-# React + TypeScript + Vite
+# 🏪 متجر ميلانو - نظام إدارة محاسبي شامل
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 🎯 نظرة عامة
 
-Currently, two official plugins are available:
+نظام محاسبي ومحلي احترافي لإدارة المتاجر والمخازن، مصمم بواجهة عربية حديثة وسهلة الاستخدام.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## ✨ المميزات
 
-## React Compiler
+### 📊 لوحة التحكم
+- 4 كروت إحصائيات ملونة:
+  - 💰 صافي الربح (أزرق)
+  - 📉 إجمالي المصروفات (وردي)
+  - 📦 إجمالي المشتريات (برتقالي)
+  - 📈 إجمالي المبيعات (أخضر)
+- رسم بياني تفاعلي للمبيعات والمشتريات
+- واجهة سريعة الاستجابة
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### 👥 إدارة العملاء
+- إضافة عملاء جدد
+- عرض قائمة العملاء
+- حذف العملاء
+- البحث والتصفية (قريباً)
+- تتبع الأرصدة
 
-## Expanding the ESLint configuration
+### 🎨 التصميم
+- ثيم داكن احترافي
+- دعم كامل للغة العربية (RTL)
+- خط Cairo الجميل
+- ألوان متناسقة وجذابة
+- انتقالات سلسة
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 🛠️ التقنيات المستخدمة
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- ⚛️ **React 18** - مكتبة بناء واجهات المستخدم
+- 📘 **TypeScript** - للأمان والاستقرار
+- ⚡ **Vite** - أداة بناء سريعة
+- 🎨 **Tailwind CSS** - للتصميم
+- 📊 **Recharts** - للرسوم البيانية
+- 🧭 **React Router** - للتنقل بين الصفحات
+- 🎯 **Lucide Icons** - أيقونات حديثة
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## 🚀 التشغيل المحلي
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+# تثبيت المكتبات
+npm install
+
+# تشغيل خادم التطوير
+npm run dev
+
+# بناء المشروع
+npm run build
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 📦 النشر على Netlify
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+1. سجل دخول على [Netlify](https://app.netlify.com)
+2. اضغط "Add new site" → "Import an existing project"
+3. اختر GitHub واختر مستودع `Melano`
+4. اختر فرع `main`
+5. الإعدادات ستُكتشف تلقائياً من `netlify.toml`
+6. اضغط "Deploy site"
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## 🎯 الصفحات المتوفرة
+
+- ✅ لوحة التحكم (Dashboard)
+- ✅ العملاء (Customers) - جاهزة بالكامل
+- 🔜 الموردين (Suppliers)
+- 🔜 المنتجات (Products)
+- 🔜 المبيعات (Sales)
+- 🔜 المشتريات (Purchases)
+- 🔜 السندات (Payments)
+- 🔜 المخزون (Expenses)
+- 🔜 التقارير (Reports)
+- 🔜 المحاسبة (Accounting)
+
+## 🎨 لقطات الشاشة
+
+### لوحة التحكم
+- كروت إحصائيات ملونة بتدرجات احترافية
+- رسم بياني خطي تفاعلي
+- تصميم نظيف وعصري
+
+### صفحة العملاء
+- جدول بيانات منظم
+- نافذة منبثقة لإضافة عميل جديد
+- أزرار إجراءات ملونة (عرض، تعديل، حذف)
+
+## 📄 الترخيص
+
+هذا المشروع مبني خصيصاً لمتجر ميلانو.
+
+## 👨‍💻 المطور
+
+تم التطوير بواسطة GenSpark AI
+
+---
+
+**🌐 رابط التطبيق المباشر:**
+قريباً على Netlify!
+
+**📦 مستودع GitHub:**
+https://github.com/mohamed-khairy-5i/Melano
