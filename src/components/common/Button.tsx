@@ -22,18 +22,18 @@ export const Button = ({
   disabled = false,
   type = 'button',
 }: ButtonProps) => {
-  const baseClasses = 'inline-flex items-center justify-center gap-2 font-medium rounded-lg transition-all duration-200 shadow-sm hover:shadow-md active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed';
+  const baseClasses = 'inline-flex items-center justify-center gap-2 font-medium rounded-xl transition-all duration-200 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed';
   
   const variants = {
-    primary: 'bg-primary-500 hover:bg-primary-600 text-white',
-    secondary: 'bg-gray-200 hover:bg-gray-300 text-gray-800 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white',
-    danger: 'bg-red-500 hover:bg-red-600 text-white',
-    success: 'bg-green-500 hover:bg-green-600 text-white',
+    primary: 'bg-blue-500 hover:bg-blue-600 text-white shadow-lg shadow-blue-500/30',
+    secondary: 'bg-dark-border hover:bg-dark-border/80 text-white',
+    danger: 'bg-red-500 hover:bg-red-600 text-white shadow-lg shadow-red-500/30',
+    success: 'bg-green-500 hover:bg-green-600 text-white shadow-lg shadow-green-500/30',
   };
   
   const sizes = {
-    sm: 'px-3 py-1.5 text-sm',
-    md: 'px-4 py-2 text-base',
+    sm: 'px-3 py-2 text-sm',
+    md: 'px-4 py-2.5 text-base',
     lg: 'px-6 py-3 text-lg',
   };
 

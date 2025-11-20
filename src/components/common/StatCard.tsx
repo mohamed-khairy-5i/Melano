@@ -5,21 +5,18 @@ interface StatCardProps {
   title: string;
   value: number;
   icon: LucideIcon;
-  color: 'green' | 'yellow' | 'red' | 'blue';
-  trend?: {
-    value: number;
-    isPositive: boolean;
-  };
+  gradient: 'blue' | 'pink' | 'orange' | 'green';
+  subtitle?: string;
 }
 
-export const StatCard = ({ title, value, icon: Icon, color, trend }: StatCardProps) => {
+export const StatCard = ({ title, value, icon: Icon, gradient, subtitle }: StatCardProps) => {
   const { currency } = useStore();
 
-  const colorClasses = {
-    green: 'from-green-500 to-green-600',
-    yellow: 'from-yellow-500 to-yellow-600',
-    red: 'from-red-500 to-red-600',
-    blue: 'from-blue-500 to-blue-600',
+  const gradients = {
+    blue: 'from-blue-500 via-blue-600 to-purple-600',
+    pink: 'from-pink-500 via-pink-600 to-red-500',
+    orange: 'from-orange-500 via-orange-600 to-yellow-500',
+    green: 'from-green-500 via-teal-500 to-cyan-600',
   };
 
   const formatCurrency = (amount: number) => {
@@ -33,23 +30,34 @@ export const StatCard = ({ title, value, icon: Icon, color, trend }: StatCardPro
   };
 
   return (
-    <div className="bg-white dark:bg-gray-900 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-6 hover:shadow-xl transition-shadow duration-300">
-      <div className="flex items-center justify-between mb-4">
-        <div className={`w-12 h-12 rounded-lg bg-gradient-to-br ${colorClasses[color]} flex items-center justify-center shadow-lg`}>
-          <Icon className="w-6 h-6 text-white" />
+    <div className={`relative overflow-hidden rounded-2xl bg-gradient-to-br ${gradients[gradient]} p-6 shadow-card transition-all duration-300 hover:scale-105 hover:shadow-xl`}>
+      {/* Icon */}
+      <div className="mb-4 flex items-center justify-between">
+        <div className="rounded-xl bg-white/20 p-3 backdrop-blur-sm">
+          <Icon className="h-8 w-8 text-white" />
         </div>
-        {trend && (
-          <div className={`text-sm font-medium ${trend.isPositive ? 'text-green-500' : 'text-red-500'}`}>
-            {trend.isPositive ? '↑' : '↓'} {trend.value}%
-          </div>
+      </div>
+
+      {/* Value */}
+      <div className="mb-2">
+        <p className="text-3xl font-bold text-white">
+          {formatCurrency(value)}
+        </p>
+      </div>
+
+      {/* Title */}
+      <div className="flex items-center justify-between">
+        <p className="text-sm text-white/90">
+          {title}
+        </p>
+        {subtitle && (
+          <span className="text-xs text-white/70">{subtitle}</span>
         )}
       </div>
-      <h3 className="text-sm text-gray-600 dark:text-gray-400 mb-1">
-        {title}
-      </h3>
-      <p className="text-2xl font-bold text-gray-800 dark:text-white">
-        {formatCurrency(value)}
-      </p>
+
+      {/* Decorative elements */}
+      <div className="absolute -right-4 -top-4 h-24 w-24 rounded-full bg-white/10 blur-2xl" />
+      <div className="absolute -bottom-4 -left-4 h-32 w-32 rounded-full bg-white/5 blur-3xl" />
     </div>
   );
 };

@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Modal } from './Modal';
 import { Button } from '../common/Button';
-import { useTranslation } from 'react-i18next';
 import { Save } from 'lucide-react';
 
 interface AddCustomerModalProps {
@@ -11,7 +10,6 @@ interface AddCustomerModalProps {
 }
 
 export const AddCustomerModal = ({ isOpen, onClose, onSave }: AddCustomerModalProps) => {
-  const { t } = useTranslation();
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
@@ -39,12 +37,12 @@ export const AddCustomerModal = ({ isOpen, onClose, onSave }: AddCustomerModalPr
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title={t('addCustomer')} size="md">
+    <Modal isOpen={isOpen} onClose={onClose} title="إضافة عميل جديد" size="md">
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Name */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-            {t('customerName')} *
+          <label className="block text-sm font-medium text-white mb-2">
+            اسم العميل *
           </label>
           <input
             type="text"
@@ -52,15 +50,15 @@ export const AddCustomerModal = ({ isOpen, onClose, onSave }: AddCustomerModalPr
             value={formData.name}
             onChange={handleChange}
             required
-            className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-800 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all"
-            placeholder={t('customerName')}
+            className="w-full px-4 py-3 rounded-xl border border-dark-border bg-dark-bg text-white placeholder-dark-muted focus:outline-none focus:border-blue-500 transition-colors"
+            placeholder="أدخل اسم العميل"
           />
         </div>
 
         {/* Phone */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-            {t('phone')} *
+          <label className="block text-sm font-medium text-white mb-2">
+            رقم الهاتف *
           </label>
           <input
             type="tel"
@@ -68,52 +66,52 @@ export const AddCustomerModal = ({ isOpen, onClose, onSave }: AddCustomerModalPr
             value={formData.phone}
             onChange={handleChange}
             required
-            className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-800 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all"
+            className="w-full px-4 py-3 rounded-xl border border-dark-border bg-dark-bg text-white placeholder-dark-muted focus:outline-none focus:border-blue-500 transition-colors"
             placeholder="777XXXXXX"
           />
         </div>
 
         {/* Email */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-            {t('email')}
+          <label className="block text-sm font-medium text-white mb-2">
+            البريد الإلكتروني
           </label>
           <input
             type="email"
             name="email"
             value={formData.email}
             onChange={handleChange}
-            className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-800 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all"
+            className="w-full px-4 py-3 rounded-xl border border-dark-border bg-dark-bg text-white placeholder-dark-muted focus:outline-none focus:border-blue-500 transition-colors"
             placeholder="example@email.com"
           />
         </div>
 
         {/* Address */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-            {t('address')}
+          <label className="block text-sm font-medium text-white mb-2">
+            العنوان
           </label>
           <textarea
             name="address"
             value={formData.address}
             onChange={handleChange}
             rows={3}
-            className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-800 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all resize-none"
-            placeholder={t('address')}
+            className="w-full px-4 py-3 rounded-xl border border-dark-border bg-dark-bg text-white placeholder-dark-muted focus:outline-none focus:border-blue-500 transition-colors resize-none"
+            placeholder="العنوان الكامل"
           />
         </div>
 
         {/* Balance */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-            {t('balance')}
+          <label className="block text-sm font-medium text-white mb-2">
+            الرصيد الافتتاحي
           </label>
           <input
             type="number"
             name="balance"
             value={formData.balance}
             onChange={handleChange}
-            className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-800 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all"
+            className="w-full px-4 py-3 rounded-xl border border-dark-border bg-dark-bg text-white placeholder-dark-muted focus:outline-none focus:border-blue-500 transition-colors"
             placeholder="0"
           />
         </div>
@@ -121,10 +119,10 @@ export const AddCustomerModal = ({ isOpen, onClose, onSave }: AddCustomerModalPr
         {/* Buttons */}
         <div className="flex gap-3 justify-end pt-4">
           <Button type="button" variant="secondary" onClick={onClose}>
-            {t('cancel')}
+            إلغاء
           </Button>
           <Button type="submit" variant="primary" icon={Save}>
-            {t('save')}
+            حفظ
           </Button>
         </div>
       </form>

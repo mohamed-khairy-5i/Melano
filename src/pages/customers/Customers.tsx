@@ -1,16 +1,16 @@
 import { useState } from 'react';
-import { Plus, Edit2, Trash2, Eye, Search } from 'lucide-react';
+import { Plus, Edit2, Trash2, Search } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { Card } from '../../components/common/Card';
 import { Button } from '../../components/common/Button';
-import { Table } from '../../components/common/Table';
 import { AddCustomerModal } from '../../components/modals/AddCustomerModal';
 
 export const Customers = () => {
   const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState('');
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [customers, setCustomers] = useState<any[]>([]);
+  const [customers, setCustomers] = useState<any[]>([
+    { id: 1, name: 'عميل متجر ميلانو النموذجي', phone: '7817070707', email: 'example@milano.com', balance: 0, address: 'صنعاء' }
+  ]);
 
   const filteredCustomers = customers.filter(customer =>
     customer.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -27,104 +27,99 @@ export const Customers = () => {
     }
   };
 
-  const columns = [
-    { header: t('customerName'), accessor: 'name' },
-    { header: t('phone'), accessor: 'phone' },
-    { header: t('email'), accessor: 'email' },
-    { 
-      header: t('balance'), 
-      accessor: 'balance',
-      cell: (row: any) => (
-        <span className={`font-bold ${row.balance > 0 ? 'text-green-500' : row.balance < 0 ? 'text-red-500' : 'text-gray-500'}`}>
-          {row.balance.toLocaleString()}
-        </span>
-      )
-    },
-    { header: t('address'), accessor: 'address' },
-    {
-      header: t('actions'),
-      accessor: 'actions',
-      cell: (row: any) => (
-        <div className="flex items-center gap-2">
-          <button
-            className="p-2 rounded-lg bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400 hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors"
-            title={t('view')}
-          >
-            <Eye className="w-4 h-4" />
-          </button>
-          <button
-            className="p-2 rounded-lg bg-yellow-100 dark:bg-yellow-900 text-yellow-600 dark:text-yellow-400 hover:bg-yellow-200 dark:hover:bg-yellow-800 transition-colors"
-            title={t('edit')}
-          >
-            <Edit2 className="w-4 h-4" />
-          </button>
-          <button
-            onClick={() => handleDeleteCustomer(row.id)}
-            className="p-2 rounded-lg bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-400 hover:bg-red-200 dark:hover:bg-red-800 transition-colors"
-            title={t('delete')}
-          >
-            <Trash2 className="w-4 h-4" />
-          </button>
-        </div>
-      ),
-    },
-  ];
-
-  const totalCredit = customers.filter(c => c.balance > 0).reduce((sum, c) => sum + c.balance, 0);
-  const totalDebit = Math.abs(customers.filter(c => c.balance < 0).reduce((sum, c) => sum + c.balance, 0));
-
   return (
-    <div className="p-6 space-y-6 animate-fadeIn">
+    <div className="min-h-screen bg-dark-bg p-6 space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold text-gray-800 dark:text-white">
-          {t('customers')}
-        </h1>
+        <div>
+          <h1 className="text-3xl font-bold text-white mb-1">
+            {t('customers')}
+          </h1>
+          <p className="text-dark-muted">
+            إدارة قائمة العملاء
+          </p>
+        </div>
         <Button icon={Plus} variant="primary" onClick={() => setIsAddModalOpen(true)}>
-          {t('addCustomer')}
+          إضافة عميل
         </Button>
       </div>
 
-      {/* Search and Filters */}
-      <Card>
-        <div className="flex items-center gap-4">
-          <div className="flex-1 relative">
-            <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-            <input
-              type="text"
-              placeholder={`${t('search')}...`}
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pr-10 px-4 py-3 rounded-lg border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-800 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all"
-            />
-          </div>
-          <Button variant="secondary">
-            {t('filter')}
-          </Button>
-          <Button variant="secondary">
-            {t('export')}
-          </Button>
+      {/* Search Bar */}
+      <div className="bg-dark-card rounded-2xl border border-dark-border p-4 shadow-card">
+        <div className="relative">
+          <Search className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-dark-muted" />
+          <input
+            type="text"
+            placeholder="البحث عن عميل..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pr-12 pl-4 py-3 bg-dark-bg border border-dark-border rounded-xl text-white placeholder-dark-muted focus:outline-none focus:border-blue-500 transition-colors"
+          />
         </div>
-      </Card>
+      </div>
 
       {/* Customers Table */}
-      <Card>
-        <Table columns={columns} data={filteredCustomers} />
-      </Card>
-
-      {/* Summary */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-6 text-white shadow-xl">
-          <p className="text-sm opacity-90 mb-1">إجمالي العملاء</p>
-          <p className="text-4xl font-bold">{customers.length}</p>
-        </div>
-        <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-xl p-6 text-white shadow-xl">
-          <p className="text-sm opacity-90 mb-1">رصيد دائن</p>
-          <p className="text-4xl font-bold">{totalCredit.toLocaleString()}</p>
-        </div>
-        <div className="bg-gradient-to-br from-red-500 to-red-600 rounded-xl p-6 text-white shadow-xl">
-          <p className="text-sm opacity-90 mb-1">رصيد مدين</p>
-          <p className="text-4xl font-bold">{totalDebit.toLocaleString()}</p>
+      <div className="bg-dark-card rounded-2xl border border-dark-border overflow-hidden shadow-card">
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead>
+              <tr className="border-b border-dark-border">
+                <th className="text-right px-6 py-4 text-sm font-semibold text-dark-muted">الاسم</th>
+                <th className="text-right px-6 py-4 text-sm font-semibold text-dark-muted">الهاتف</th>
+                <th className="text-right px-6 py-4 text-sm font-semibold text-dark-muted">البريد الإلكتروني</th>
+                <th className="text-right px-6 py-4 text-sm font-semibold text-dark-muted">الرصيد</th>
+                <th className="text-right px-6 py-4 text-sm font-semibold text-dark-muted">العنوان</th>
+                <th className="text-right px-6 py-4 text-sm font-semibold text-dark-muted">الإجراءات</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredCustomers.length === 0 ? (
+                <tr>
+                  <td colSpan={6} className="px-6 py-12 text-center text-dark-muted">
+                    لا توجد بيانات
+                  </td>
+                </tr>
+              ) : (
+                filteredCustomers.map((customer) => (
+                  <tr
+                    key={customer.id}
+                    className="border-b border-dark-border hover:bg-dark-bg/50 transition-colors"
+                  >
+                    <td className="px-6 py-4 text-white">{customer.name}</td>
+                    <td className="px-6 py-4 text-dark-text">{customer.phone}</td>
+                    <td className="px-6 py-4 text-dark-text">{customer.email}</td>
+                    <td className="px-6 py-4">
+                      <span className={`font-semibold ${
+                        customer.balance > 0 ? 'text-green-500' : 
+                        customer.balance < 0 ? 'text-red-500' : 
+                        'text-dark-muted'
+                      }`}>
+                        {customer.balance.toLocaleString()} ر.ي
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-dark-text">{customer.address}</td>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-2">
+                        <button
+                          className="p-2 rounded-lg bg-blue-500/10 text-blue-500 hover:bg-blue-500/20 transition-colors"
+                          title="تعديل"
+                        >
+                          <Edit2 className="w-4 h-4" />
+                        </button>
+                        <button
+                          onClick={() => handleDeleteCustomer(customer.id)}
+                          className="p-2 rounded-lg bg-red-500/10 text-red-500 hover:bg-red-500/20 transition-colors"
+                          title="حذف"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
         </div>
       </div>
 
